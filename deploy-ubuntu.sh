@@ -89,7 +89,14 @@ sudo rm -f /etc/nginx/sites-enabled/default
 
 # Test Nginx configuration
 print_status "Testing Nginx configuration..."
-sudo nginx -t
+if sudo nginx -t; then
+    print_status "Nginx configuration test passed"
+else
+    print_error "Nginx configuration test failed!"
+    print_status "Checking Nginx error logs..."
+    sudo tail -20 /var/log/nginx/error.log
+    exit 1
+fi
 
 # Start services with PM2
 print_status "Starting application with PM2..."
